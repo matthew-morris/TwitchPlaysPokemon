@@ -1,0 +1,12 @@
+c:\users\matt\documents\visual studio 2017\Projects\TwitchPlaysPokemon\TwitchPlaysPokemon\bin\Debug\TwitchPlaysPokemon.exe.config
+c:\users\matt\documents\visual studio 2017\Projects\TwitchPlaysPokemon\TwitchPlaysPokemon\bin\Debug\TwitchPlaysPokemon.exe
+c:\users\matt\documents\visual studio 2017\Projects\TwitchPlaysPokemon\TwitchPlaysPokemon\bin\Debug\TwitchPlaysPokemon.pdb
+c:\users\matt\documents\visual studio 2017\Projects\TwitchPlaysPokemon\TwitchPlaysPokemon\obj\Debug\TwitchPlaysPokemon.csprojResolveAssemblyReference.cache
+c:\users\matt\documents\visual studio 2017\Projects\TwitchPlaysPokemon\TwitchPlaysPokemon\obj\Debug\TwitchPlaysPokemon.exe
+c:\users\matt\documents\visual studio 2017\Projects\TwitchPlaysPokemon\TwitchPlaysPokemon\obj\Debug\TwitchPlaysPokemon.pdb
+C:\Users\Matt\Documents\Visual Studio 2015\Projects\TwitchPlaysPokemon\TwitchPlaysPokemon\TwitchPlaysPokemon\bin\Debug\TwitchPlaysPokemon.exe.config
+C:\Users\Matt\Documents\Visual Studio 2015\Projects\TwitchPlaysPokemon\TwitchPlaysPokemon\TwitchPlaysPokemon\obj\Debug\TwitchPlaysPokemon.exe
+C:\Users\Matt\Documents\Visual Studio 2015\Projects\TwitchPlaysPokemon\TwitchPlaysPokemon\TwitchPlaysPokemon\obj\Debug\TwitchPlaysPokemon.pdb
+C:\Users\Matt\Documents\Visual Studio 2015\Projects\TwitchPlaysPokemon\TwitchPlaysPokemon\TwitchPlaysPokemon\bin\Debug\TwitchPlaysPokemon.exe
+C:\Users\Matt\Documents\Visual Studio 2015\Projects\TwitchPlaysPokemon\TwitchPlaysPokemon\TwitchPlaysPokemon\bin\Debug\TwitchPlaysPokemon.pdb
+C:\Users\Matt\Documents\Visual Studio 2015\Projects\TwitchPlaysPokemon\TwitchPlaysPokemon\TwitchPlaysPokemon\obj\Debug\TwitchPlaysPokemon.csprojResolveAssemblyReference.cache

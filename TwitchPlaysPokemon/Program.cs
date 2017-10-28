@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace TwitchBot
@@ -20,7 +22,13 @@ namespace TwitchBot
         static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, string lpszClass, string lpszWindow);
 
         [DllImport("User32.Dll", EntryPoint = "PostMessageA")]
-        static extern bool PostMessage(IntPtr hWnd, uint msg, Keys wParam, ulong lParam);
+        static extern bool PostMessage(IntPtr hWnd, uint msg, Keys wParam, uint lParam);
+
+        [DllImport("User32.Dll", EntryPoint = "PostMessageA")]
+        static extern bool PostMessage(IntPtr hWnd, uint msg, uint wParam, uint lParam);
+
+        [DllImport("User32.Dll", EntryPoint = "SendMessageA")]
+        static extern bool SendMessage(IntPtr hWnd, uint msg, uint wParam, uint lParam);
 
         [DllImport("user32.dll")]
         static extern byte VkKeyScan(Keys key);
@@ -29,9 +37,11 @@ namespace TwitchBot
         private static extern uint MapVirtualKey(uint uCode, uint uMapType);
 
         const int WM_KEYDOWN = 0x100;
-        const int WM_KEYUP = 0x0101;
+        const int WM_KEYUP = 0x101;
         const int WM_ACTIVATE = 0x0006;
         const int WM_SETCURSOR = 0x0020;
+        const int WM_MOUSEACTIVATE = 0x0021;
+        const int WM_GETOBJECT = 0x003D;
 
         public static IntPtr getProcess(string title)
         {
@@ -71,7 +81,14 @@ namespace TwitchBot
                 //message ":mcubed333!mcubed333@mcubed333.tmi.twitch.tv PRIVMSG #mcubed333 :!mcubed"  string
                 //message ":tpark565!tpark565@tpark565.tmi.twitch.tv PRIVMSG #mcubed333 :aleiraoejr"	string
 
-                index = message.IndexOf("@");
+                try
+                {
+                    index = message.IndexOf("@");
+                }
+                catch (Exception e)
+                {
+                    index = -1;
+                }
                 if (index >= 0)
                 {
                     message = message.Substring(index + 1);
@@ -86,54 +103,54 @@ namespace TwitchBot
                     // presses up arrow
                     if (message.Contains("up"))
                     {
-                        SendExtendedKey(Keys.Up);
+                        SendKey(Keys.Up, true);
                     }
                     // presses down arrow key
                     else if (message.Contains("down"))
                     {
-                        SendExtendedKey(Keys.Down);
+                        SendKey(Keys.Down, true);
                     }
                     // presses left arrow key
                     else if (message.Contains("left"))
                     {
-                        SendExtendedKey(Keys.Left);
+                        SendKey(Keys.Left, true);
                     }
                     // presses right arrow key
                     else if (message.Contains("right"))
                     {
-                        SendExtendedKey(Keys.Right);
+                        SendKey(Keys.Right, true);
                     }
                     // press A button (X on keyboard)
                     else if (message.Contains("A"))
                     {
-                        SendKey(Keys.X);
+                        SendKey(Keys.X, false);
                     }
                     // presses B button (Z on keyboard)
                     else if (message.Contains("B"))
                     {
-                        SendKey(Keys.Z);
+                        SendKey(Keys.Z, false);
                     }
                     // presses L button (A on keyboard)
                     else if (message.Contains("L"))
                     {
-                        SendKey(Keys.A);
+                        SendKey(Keys.A, false);
                     }
                     // presses R button (S on keyboard)
                     else if (message.Contains("R"))
                     {
-                        SendKey(Keys.S);
+                        SendKey(Keys.S, false);
                     }
                     // presses Select button (backspace on keyboard)
                     else if (message.Contains("select"))
                     {
-                        SendKey(Keys.X);
+                        SendKey(Keys.X, false);
                     }
                     // presses Start button (Enter on keyboard)
                     else if (message.Contains("start"))
                     {
-                        SendKey(Keys.Enter);
+                        SendKey(Keys.Enter, false);
                     }
-                    else if(message.Contains("brandon"))
+                    else if (message.Contains("brandon"))
                     {
                         irc.sendChatMessage("brandon is gay");
                     }
@@ -163,9 +180,9 @@ namespace TwitchBot
             return null;
         }
 
-        public static void SendKey(Keys key)
+        public static void SendKey(Keys key, bool extended)
         {
-            IntPtr handler = getProcess("mGBA - 0.5.0");
+            IntPtr handler = getProcess("mGBA - Pokemon - Sapphire Version");
 
             if (!handler.Equals(IntPtr.Zero))
             {
@@ -175,36 +192,36 @@ namespace TwitchBot
                     //PostMessage(handler, WM_SETCURSOR, null, 0x02000001);
                     //PostMessage(handler, WM_ACTIVATE, 0, 0);
                     //SetForegroundWindow(handler);
-                    uint scanCode = MapVirtualKey((uint)key, 0);
-                    ulong lParam = (0x00000001 | (scanCode << 16));
-                    PostMessage(handler, WM_KEYDOWN, key, lParam);
-                    uint repeat = 1;
-                    uint up = 1;
-                    lParam = (0xC0000000 | (scanCode << 16) | (repeat << 30) | 0x00000001);
+                    if (extended)
+                    {
+                        //PostMessage(handler, WM_SETCURSOR, 0x006906B0, 0x02000001);
+                        uint scanCode = MapVirtualKey((uint)key, 0);
+                        uint lParam = (0x01000001 | (scanCode << 16));
+                        PostMessage(handler, WM_KEYDOWN, key, lParam);
+                        uint repeat = 1;
+                        uint up = 1;
+                        lParam = (0xC1000000 | (scanCode << 16) | (repeat << 30) | 0x00000001);
 
-                    PostMessage(handler, WM_KEYUP, key, lParam);
-                }
-            }
-        }
-        public static void SendExtendedKey(Keys key)
-        {
-            IntPtr handler = getProcess("mGBA - 0.5.0");
+                        Thread.Sleep(50);
+                        PostMessage(handler, WM_KEYUP, key, lParam);
+                    }
+                    else
+                    {
+                        //PostMessage(handler, 0xC0CD, 0xFFFFFFFC, 0x00000000);
+                        //SendMessage(handler, 0x0164, 0x00000000, 0x0250C914);
+                        //SendMessage(handler, WM_GETOBJECT, 0xDECAFD46, 0xFFFFFFE7);
+                        //SendMessage(handler, WM_MOUSEACTIVATE, 0x005202AE, 0x0201001);
+                        //SendMessage(handler, WM_SETCURSOR, 0x006906B0, 0x02010001);
+                        uint scanCode = MapVirtualKey((uint)key, 0);
+                        uint lParam = (0x00000001 | (scanCode << 16));
+                        PostMessage(handler, WM_KEYDOWN, key, lParam);
+                        uint repeat = 1;
+                        uint up = 1;
+                        lParam = (0xC0000000 | (scanCode << 16) | (repeat << 30) | 0x00000001);
 
-            if (!handler.Equals(IntPtr.Zero))
-            {
-                IntPtr editWnd = FindWindowEx(handler, IntPtr.Zero, null, null);
-                if (!editWnd.Equals(IntPtr.Zero))
-                {
-                    //SetForegroundWindow(handler);
-                    //PostMessage(handler, WM_ACTIVATE, 0, 0);
-                    uint scanCode = MapVirtualKey((uint)key, 0);
-                    ulong lParam = (0x01000001 | (scanCode << 16));
-                    PostMessage(handler, WM_KEYDOWN, key, lParam);
-                    uint repeat = 1;
-                    uint up = 1;
-                    lParam = (0xC1000000 | (scanCode << 16) | (repeat << 30) | 0x00000001);
-
-                    PostMessage(handler, WM_KEYUP, key, lParam);
+                        Thread.Sleep(1000);
+                        PostMessage(handler, WM_KEYUP, key, lParam);
+                    }
                 }
             }
         }
